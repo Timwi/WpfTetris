@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using RT.Util;
-using RT.Util.ExtensionMethods;
-using RT.Util.Forms;
 
 namespace WpfTetris
 {
@@ -20,10 +12,6 @@ namespace WpfTetris
     {
         private const int fieldWidth = 10;
         private const int fieldHeight = 20;
-
-        private OutlinedText gameOver;
-        private LinearGradientBrush gameOverFill = new LinearGradientBrush(Color.FromRgb(255, 128, 64), Color.FromRgb(255, 64, 0), 90);
-        private LinearGradientBrush gameOverStroke = new LinearGradientBrush(Color.FromRgb(32, 0, 0), Color.FromRgb(64, 0, 0), 90);
 
         private Image[][] field;
         private TetrisPiece currentPiece;
@@ -76,7 +64,7 @@ namespace WpfTetris
             var canLower = true;
             for (int x = 0; x < currentPiece.Width; x++)
                 for (int y = 0; y < currentPiece.Height; y++)
-                    if (currentPiece.Shape[x][y] && !IsEmptySpace(currentPieceX + x, currentPieceY + y + 1))
+                    if (currentPiece.Shape[x][y] && !isEmptySpace(currentPieceX + x, currentPieceY + y + 1))
                         canLower = false;
 
             if (canLower)
@@ -138,7 +126,7 @@ namespace WpfTetris
                         moveAndResize(field[x][y], Canvas.GetLeft(playingField) + x * blockSize, Canvas.GetTop(playingField) + y * blockSize, blockSize, blockSize);
         }
 
-        private bool IsEmptySpace(int x, int y)
+        private bool isEmptySpace(int x, int y)
         {
             // There are walls on the left and right and a floor at the bottom
             if (x < 0 || x >= fieldWidth || y >= fieldHeight)
@@ -206,17 +194,7 @@ namespace WpfTetris
             Canvas.SetLeft(elem, x);
             Canvas.SetTop(elem, y);
         }
-
-        private void moveAfter(UIElement moveWhat, UIElement after)
-        {
-            var ind = mainCanvas.Children.IndexOf(moveWhat);
-            mainCanvas.Children.RemoveAt(ind);
-            if (after == null)
-                mainCanvas.Children.Add(moveWhat);
-            else
-                mainCanvas.Children.Insert(mainCanvas.Children.IndexOf(after) + 1, moveWhat);
-        }
-
+        
         private void keyDown(object sender, KeyEventArgs e)
         {
             bool canMove = true;
@@ -236,7 +214,7 @@ namespace WpfTetris
                     var dx = e.Key == Key.Left ? -1 : 1;
                     for (int x = 0; x < currentPiece.Width; x++)
                         for (int y = 0; y < currentPiece.Height; y++)
-                            if (currentPiece.Shape[x][y] && !IsEmptySpace(currentPieceX + x + dx, currentPieceY + y))
+                            if (currentPiece.Shape[x][y] && !isEmptySpace(currentPieceX + x + dx, currentPieceY + y))
                                 canMove = false;
                     if (canMove)
                     {
@@ -252,7 +230,7 @@ namespace WpfTetris
                     var newPieceY = currentPieceY + currentPiece.Height / 2 - newPiece.Height / 2;
                     for (int x = 0; x < newPiece.Width; x++)
                         for (int y = 0; y < newPiece.Height; y++)
-                            if (newPiece.Shape[x][y] && !IsEmptySpace(newPieceX + x, newPieceY + y))
+                            if (newPiece.Shape[x][y] && !isEmptySpace(newPieceX + x, newPieceY + y))
                                 canMove = false;
 
                     if (canMove)

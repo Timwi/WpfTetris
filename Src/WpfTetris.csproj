@@ -57,6 +57,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Ut.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -73,24 +74,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animate.cs" />
-    <Compile Include="AnimateBezier.cs" />
-    <Compile Include="AnimateLinear.cs" />
-    <Compile Include="AnimateMultiple.cs" />
     <Compile Include="TetrisPiece.cs" />
-    <Compile Include="OutlinedText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\RT.Util\Src\RT.Util.csproj">
-      <Project>{8D0FE79C-AD8D-475C-9E6F-9CAE85365B5D}</Project>
-      <Name>Util</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="Resources\background.png" />
     <Resource Include="Resources\blockI.png" />
     <Resource Include="Resources\blockJ.png" />
     <Resource Include="Resources\blockL.png" />
@@ -98,9 +89,6 @@
     <Resource Include="Resources\blockS.png" />
     <Resource Include="Resources\blockT.png" />
     <Resource Include="Resources\blockZ.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\background.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
