@@ -13,6 +13,10 @@ namespace WpfTetris
         private const int fieldWidth = 10;
         private const int fieldHeight = 20;
 
+        private OutlinedText gameOver;
+        private LinearGradientBrush gameOverFill = new LinearGradientBrush(Color.FromRgb(255, 128, 64), Color.FromRgb(255, 64, 0), 90);
+        private LinearGradientBrush gameOverStroke = new LinearGradientBrush(Color.FromRgb(32, 0, 0), Color.FromRgb(64, 0, 0), 90);
+
         private Image[][] field;
         private TetrisPiece currentPiece;
         private Image[][] currentPieceImages;
@@ -58,6 +62,16 @@ namespace WpfTetris
             nextPiece = TetrisPiece.GetRandomPiece();
         }
 
+        private void doGameOver()
+        {
+            gameOver = new OutlinedText { Font = new FontFamily("Impact"), FontSize = blockSize * 1.2, Text = "GAME OVER" };
+            gameOver.Fill = gameOverFill;
+            gameOver.Stroke = new Pen(gameOverStroke, blockSize / 5) { LineJoin = PenLineJoin.Round };
+            mainCanvas.Children.Add(gameOver);
+            moveAndResize(gameOver, mainCanvas.ActualWidth / 2 - gameOver.MinWidth / 2, mainCanvas.ActualHeight / 2 - gameOver.MinHeight / 2, gameOver.MinWidth, gameOver.MinHeight);
+            timer.IsEnabled = false;
+        }
+
         private void tick(object _ = null, EventArgs __ = null)
         {
             // Is there enough free space to lower the current piece by one block?
@@ -80,7 +94,14 @@ namespace WpfTetris
                 for (int x = 0; x < currentPiece.Width; x++)
                     for (int y = 0; y < currentPiece.Height; y++)
                         if (currentPieceImages[x][y] != null)
+                        {
+                            if (currentPieceY + y < 0)
+                            {
+                                doGameOver();
+                                return;
+                            }
                             field[currentPieceX + x][currentPieceY + y] = currentPieceImages[x][y];
+                        }
 
                 // 2. Check if we’ve created a full row.
                 var fullRows = new List<int>();
@@ -197,6 +218,9 @@ namespace WpfTetris
         
         private void keyDown(object sender, KeyEventArgs e)
         {
+            if (gameOver != null)
+                return;
+
             bool canMove = true;
             switch (e.Key)
             {
@@ -254,6 +278,9 @@ namespace WpfTetris
 
         private void keyUp(object sender, KeyEventArgs e)
         {
+            if (gameOver != null)
+                return;
+
             if (e.Key == Key.Down)
             {
                 downKeyPressed = false;
